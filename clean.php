@@ -41,6 +41,15 @@ function removeUnnecessarySpaces($input) {
     return preg_replace('/\s+/', ' ', $input);
 }
 
+function removeDivisionNames($input) {
+    $input = str_ireplace(' sub county', '', $input);
+    $input = str_ireplace(' sub- county', '', $input);
+    $input = str_ireplace(' sub-county', '', $input);
+    $input = str_ireplace(' county', '', $input);
+    $input = str_ireplace(' ward', '', $input);
+    return $input;
+}
+
 /**
  * Writes an array of the following structure into $output:
     Array
@@ -91,11 +100,6 @@ while (($line = fgetcsv($inputHandle)) !== false) {
     // skip first line if it's a header
     if (HAS_HEADER_ROW && $i++ == 0) continue;
 
-    trackAmbiguousUIDs($county_ids, $line[COL_CUID], $line[COL_COUNTY]);
-    trackAmbiguousUIDs($county_ids, $line[COL_COUNTY], $line[COL_CUID]);
-    trackAmbiguousUIDs($subcounty_ids, $line[COL_SCUID], $line[COL_SUBCOUNTY]);
-    trackAmbiguousUIDs($ward_ids, $line[COL_UID], $line[COL_WARD]);
-
     foreach ($line as $col_id => &$item) {
         switch ($col_id) {
             case COL_GID:
@@ -103,6 +107,7 @@ while (($line = fgetcsv($inputHandle)) !== false) {
                 // For GID: numeric identifier is an integer, although i saw it being saved with .0 appended.
                 // For population: also integer, we don't cut people into pieces ...
                 $item = (int) $item;
+                break;
             case COL_COUNTY:
             case COL_SUBCOUNTY:
             case COL_WARD:
@@ -110,9 +115,15 @@ while (($line = fgetcsv($inputHandle)) !== false) {
                 $item = capitalizeAfterChar($item, '-');
                 $item = capitalizeAfterChar($item, '/');
                 $item = removeUnnecessarySpaces($item);
+                $item = removeDivisionNames($item);
+                $item = trim($item);
                 break;
         }
     }
+
+    trackAmbiguousUIDs($county_ids, $line[COL_CUID], $line[COL_COUNTY]);
+    trackAmbiguousUIDs($subcounty_ids, $line[COL_SCUID], $line[COL_SUBCOUNTY]);
+    trackAmbiguousUIDs($ward_ids, $line[COL_UID], $line[COL_WARD]);
 
     fputcsv($outputHandle, $line);
 }
