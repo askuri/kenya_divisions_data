@@ -44,3 +44,8 @@ coding or specifically of PHP is required.
 3. Run `composer.phar install` inside this project directory.
 4. To execute it, run `php index.php` where `php` is either in your PATH variable, or you give the path to your PHP
 executable directly (often something like `C:\php\php.exe` on Windows).
+
+## License
+Everything in the data directory is licensed under the Creative Commons 4.0 International License.
+
+[![licensebuttons by](https://licensebuttons.net/l/by/3.0/88x31.png)](https://creativecommons.org/licenses/by/4.0)
