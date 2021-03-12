@@ -1,0 +1,9 @@
+{
+    "description": "Administrative Divisions of Kenya Data and conversion script for the administrative divisions of Kenya (County, Sub-County, Ward)",
+    "name": "askuri/kenya_divisions_data",
+    "require": {
+        "gasparesganga/php-shapefile": "^3.4",
+        "ext-json": "*",
+        "php": ">=7.1"
+    }
+}
